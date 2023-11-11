@@ -21,12 +21,11 @@ import javafx.scene.control.Button;
 
 public class clientFormController {
     public int port_sv = 8888;
-    public String address_sv = "192.168.1.178";
+    public String address_sv = "localhost";
+    public int  port1 = 9999;
     TargetDataLine audio_in;
     SourceDataLine audio_out;
-
-    public static AudioFormat getaudioFrmat() {
-    	List<client_thread_receive> receiveThreads = new ArrayList<>();
+    public static AudioFormat getaudioFrmat(){
         float sampleRate = 44100.0F; // Tần số lấy mẫu âm thanh
         int sampleSizeInbits = 16; // Số bit cho mỗi mẫu
         int channel = 2; // Số kênh âm thanh (2 cho stereo)
@@ -51,43 +50,45 @@ public class clientFormController {
             }
 
             // Tạo và cấu hình dòng đầu vào âm thanh (TargetDataLine)
-            audio_in = (TargetDataLine) AudioSystem.getLine(infor);
-            audio_in.open(format);
-            audio_in.start();
+                audio_in = (TargetDataLine) AudioSystem.getLine(infor);
+                audio_in.open(format);
+                audio_in.start();
 
-            // Tạo và cấu hình dòng đầu ra âm thanh (SourceDataLine)
-            DataLine.Info outInfo = new DataLine.Info(SourceDataLine.class, format);
-            if (!AudioSystem.isLineSupported(outInfo)) {
-                System.out.println("Không hỗ trợ định dạng âm thanh đầu ra này");
-                return;
-            }
-            audio_out = (SourceDataLine) AudioSystem.getLine(outInfo);
-            audio_out.open(format);
-            audio_out.start();
+                // Tạo và cấu hình dòng đầu ra âm thanh (SourceDataLine)
+                DataLine.Info outInfo = new DataLine.Info(SourceDataLine.class, format);
+                if (!AudioSystem.isLineSupported(outInfo)) {
+                    System.out.println("Không hỗ trợ định dạng âm thanh đầu ra này");
+                    return;
+                }
+                    audio_out = (SourceDataLine) AudioSystem.getLine(outInfo) ;
+                    audio_out.open(format);
+                    audio_out.start();
 
-            // Cấu hình thông tin cho client_thread_send (Thread gửi dữ liệu âm thanh)
-            client_thread_send thr_s = new client_thread_send();
-            InetAddress ip = InetAddress.getByName(address_sv);
-            thr_s.audio_in = audio_in;
-            thr_s.din = new DatagramSocket();
-            thr_s.server_ip = ip;
-            thr_s.server_port = port_sv;
+                    // Cấu hình thông tin cho client_thread_send (Thread gửi dữ liệu âm thanh)
+                    client_thread_send thr_s = new client_thread_send();
+                    InetAddress ip = InetAddress.getByName(address_sv);
+                    thr_s.audio_in = audio_in;
+                    thr_s.din = new DatagramSocket();
+                    thr_s.server_ip = ip;
+                    thr_s.server_port = port_sv;
+                    
 
-            // Cấu hình thông tin cho client__thread_receive (Thread nhận dữ liệu âm thanh)
-            client_thread_receive thr_rc = new client_thread_receive();
-            thr_rc.audio_out = audio_out;
-            thr_rc.dout = thr_s.din; // Sử dụng cùng một DatagramSocket
-            thr_rc.server_ip = ip;
-            thr_rc.server_port = port_sv;
-            Main.Calling = true;
-            thr_s.start();
-            thr_rc.start();
-            btn_start.setVisible(false);
+                    // Cấu hình thông tin cho client__thread_receive (Thread nhận dữ liệu âm thanh)
+                    client_thread_receive thr_rc = new client_thread_receive();
+                    thr_rc.audio_out = audio_out;
+                    thr_rc.dout = new DatagramSocket(port1); // Sử dụng cùng một DatagramSocket
+//                    thr_rc.server_ip = ip;
+//                    thr_rc.server_port = port1;
+                    client_form.Calling = true;
+                    thr_s.start();
+                    thr_rc.start();
+                    btn_start.setVisible(false);
+                
             
         } catch (LineUnavailableException | SocketException | UnknownHostException ex) {
-
+          
         }
-    }
+       }
 
     @FXML
     private Button btn_start;

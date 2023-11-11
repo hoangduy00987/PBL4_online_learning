@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.TargetDataLine;
 public class client_thread_send extends Thread{
     public  TargetDataLine audio_in = null;
@@ -17,7 +15,7 @@ public class client_thread_send extends Thread{
     @Override
     public void run(){
         System.out.print("Gui am thanh den server");
-        while(Main.Calling){
+        while(client_form.Calling){
         try{
         //doc du lieu am thanh de luu vao buffer
         audio_in.read(buffer_send ,0,buffer_send.length);
@@ -26,7 +24,7 @@ public class client_thread_send extends Thread{
         // gui den may chu
         din.send(data);
         }catch(IOException ex){
-            Logger.getLogger(client_thread_send.class.getName()).log(Level.SEVERE, null, ex);
+           
         }
         }
         audio_in.close();
