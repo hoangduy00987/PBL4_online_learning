@@ -12,9 +12,14 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="btn_start" layoutX="138.0" layoutY="121.0" onAction="#btn_Clickedstart" text="Start">
+      <Button fx:id="mic" layoutX="191.0" layoutY="121.0" onAction="#btn_mic" text="mic">
          <font>
             <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="speaker" layoutX="77.0" layoutY="121.0" mnemonicParsing="false" onAction="#btn_speaker" prefHeight="27.0" prefWidth="69.0" text="speaker">
+         <font>
+            <Font name="System Bold" size="13.0" />
          </font>
       </Button>
    </children>
